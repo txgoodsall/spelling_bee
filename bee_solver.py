@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import collections
 import itertools
+import os
+import pickle
 import sys
 
 
@@ -28,15 +30,21 @@ def sort_into_length(words):
     return out
 
 def load_words():
+    fname = 'bee_solver_dict.pkl'
+    if os.path.exists(fname):
+        dd = pickle.load(open(fname, 'rb'))
+    else:
 
-    lines = open('words.txt').readlines()
-    words = [l.strip() for l in lines]
-    dd = collections.defaultdict(list)
-    for w in words:
-        if w[0].isupper():
-            continue
-        key = ''.join(sorted(set(w)))
-        dd[key].append(w.lower())
+        lines = open('words.txt').readlines()
+        words = [l.strip() for l in lines]
+        dd = collections.defaultdict(list)
+        for w in words:
+            if w[0].isupper():
+                continue
+            key = ''.join(sorted(set(w)))
+            dd[key].append(w.lower())
+
+        pickle.dump(dd, open(fname, 'wb'))
 
     return dd
 
