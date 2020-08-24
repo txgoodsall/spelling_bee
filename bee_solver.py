@@ -7,23 +7,18 @@ import sys
 
 
 def get_all_combinations(letters, center_letter):
+    """
+    Get all combinations of unique letters that include the center_letter for
+    unique sets of length 4 and up
+    """
     combinations = []
-    for n in range(3, 7):
+    for n in range(1, 7):
         combinations.extend([''.join(sorted(list(ls)+[center_letter])) for ls in itertools.combinations(letters, n)])
     return combinations
 
-    
-def solve_puzzle(center_letter, other_letters):
-    dd = load_words()
-    found_words = []
-    for word in get_all_combinations(other_letters, center_letter):
-        if word in dd:
-            found_words.extend(dd[word])
-    words = sorted(list(set(found_words)))
-    print(f"Found {len(words)} words!")    
-    return sort_into_length(words)
-
 def sort_into_length(words):
+    """Sort all the words into length order.  They will already in sorted
+    alphabetically"""
     d = collections.defaultdict(list)
     for word in words:
         d[len(word)].append(word)
@@ -69,6 +64,24 @@ def print_in_columns(l, ncols):
         if w3 is None: 
             w3 = ''
         print(f'{w1:10} {w2:10} {w3:10}')
+
+
+def min_length(words, min_length=4):
+    """Filter out all words less than the minimum length"""
+    return [word for word in words if len(word) >= min_length]
+
+
+    
+def solve_puzzle(center_letter, other_letters):
+    """Solve the puzzle"""
+    word_dict = load_words()
+    found_words = []
+    for word in get_all_combinations(other_letters, center_letter):
+        if word in word_dict:
+            found_words.extend(word_dict[word])
+    words = sorted(list(set(found_words)))
+    print(f"Found {len(words)} words!")    
+    return sort_into_length(min_length(words))
 
 
 def main():
